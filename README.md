@@ -1,2 +1,2 @@
 # poly
-高性能内存池实现
+High performance memory pool, as a reference of dlmalloc
