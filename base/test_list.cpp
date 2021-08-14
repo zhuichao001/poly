@@ -1,10 +1,10 @@
 
 #include <stdio.h>
-#include "queue.h"
+#include "list.h"
 
 
 int main(){
-    queue<int> qi;
+    List<int> qi;
     int *i=new int(3);
     int *j=new int(5);
 
