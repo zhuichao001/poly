@@ -85,6 +85,10 @@ public:
         return true;
     }
 
+    void print(){
+        fprintf(stderr, "capacity:%d num:%d head:%d tail:%d\n", capacity_, num_, head_, tail_);
+    }
+
 private:
     T * array_;
     FLAG_STATE * flags_;

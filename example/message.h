@@ -26,11 +26,15 @@ public:
     }
 
     void* operator new(size_t size) {
+        fprintf(stderr, "new called\n");
         return Message::pool_.pop();
+        fprintf(stderr, "new ok\n");
     }
 
     void operator delete(void* p) {
+        fprintf(stderr, "delete called\n");
         Message::pool_.push(static_cast<Message*>(p));
+        fprintf(stderr, "delete ok\n");
     }
 };
 
