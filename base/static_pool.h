@@ -34,6 +34,10 @@ public:
         delete []array_;
     }
 
+    int capacity() const {
+        return capacity_;
+    }
+
     bool push(const T &e){
         if(num_ == capacity_){
             return false;

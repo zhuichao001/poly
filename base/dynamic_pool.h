@@ -25,10 +25,10 @@ class DynamicPool {
 public:
     static StaticPool<Node<T>*> avaliable;
 
-    DynamicPool(int n) {
-
-        Node<T> *nodes = ::new Node<T>[n+1];
-        for(int i=0; i<n+1; ++i){
+    DynamicPool() {
+        const int n = DynamicPool<T>::avaliable.capacity();
+        Node<T> *nodes = ::new Node<T>[n];
+        for(int i=0; i<n; ++i){
             DynamicPool<T>::avaliable.push(&nodes[i]);
         }
 

@@ -1,5 +1,5 @@
-#ifndef _POLY_MESSAGE_H
-#define _POLY_MESSAGE_H
+#ifndef POLYMESSAGEH
+#define POLYMESSAGEH
 
 #include <stdlib.h>
 #include <iostream>
@@ -8,32 +8,32 @@
 
 
 class Message {
-    std::string val_;
+    std::string val;
 public:
-    static DynamicPool<Message*> pool_;
+    static DynamicPool<Message*> pool;
 
     Message(){
         std::cout<<"Message() constructed"<<std::endl;
     }
 
     Message(const std::string v):
-        val_(v){
-        std::cout<<"Message("<<val_<<") constructed"<<std::endl;
+        val(v){
+        std::cout<<"Message("<<val<<") constructed"<<std::endl;
     }
 
     ~Message() {
-        std::cout<<"~Message("<<val_<<") destroyed"<<std::endl;
+        std::cout<<"~Message("<<val<<") destroyed"<<std::endl;
     }
 
     void* operator new(size_t size) {
         fprintf(stderr, "new called\n");
-        return Message::pool_.pop();
+        return Message::pool.pop();
         fprintf(stderr, "new ok\n");
     }
 
     void operator delete(void* p) {
         fprintf(stderr, "delete called\n");
-        Message::pool_.push(static_cast<Message*>(p));
+        Message::pool.push(static_cast<Message*>(p));
         fprintf(stderr, "delete ok\n");
     }
 };
