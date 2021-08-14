@@ -20,7 +20,7 @@ public:
 
 template<typename T>
 class DynamicPool {
-    Node<T> *head;
+    Node<T> *head, guard;
     Node<T> *tail;
 public:
     static StaticPool<Node<T>*> avaliable;
@@ -30,16 +30,18 @@ public:
         Node<T> *nodes = ::new Node<T>[n];
         for(int i=0; i<n; ++i){
             DynamicPool<T>::avaliable.push(&nodes[i]);
+            fprintf(stderr, "%d ", &nodes[i]);
+            fprintf(stderr, "\n");
         }
 
         DynamicPool<T>::avaliable.print();
 
-        DynamicPool<T>::avaliable.pop(&head);
-        fprintf(stderr, "prepare pop node, head:%d\n", head);
+        //DynamicPool<T>::avaliable.pop(&head);
+        //fprintf(stderr, "prepare pop node, head:%d\n", head);
 
-        DynamicPool<T>::avaliable.print();
+        //DynamicPool<T>::avaliable.print();
 
-        tail = head;
+        tail = head = &guard;
         head->next = nullptr;
     }
 
@@ -60,11 +62,14 @@ public:
         fprintf(stderr, " |||  tail:%d\n", tail);
     }
 
-    void push(const T &t) {
-        Node<T> * e ;
-        DynamicPool<T>::avaliable.pop(&e);
-        fprintf(stderr, "push T, pop node:%d\n", e);
+    bool push(const T &t) {
+        Node<T> * e =nullptr;
+        bool ok = DynamicPool<T>::avaliable.pop(&e);
+        fprintf(stderr, "b:%d push T, pop node:%d\n", ok, e);
         DynamicPool<T>::avaliable.print();
+        if(!ok){
+            return false;
+        }
 
         e->next = nullptr;
         e->val = t;
@@ -95,20 +100,24 @@ public:
         __sync_bool_compare_and_swap((uint64_t**)(&tail), (uint64_t*)last, (uint64_t*)e);
 
         //print();
+        return true;
     }
 
     T pop() {
         Node<T> *first = nullptr;
         do{
-            first = head;
-            if (first->next == nullptr){
+            first = head->next;
+            if (first == nullptr){
                 return nullptr;
             }
-        } while( !__sync_bool_compare_and_swap((uint64_t**)(&head), (uint64_t*)first, (uint64_t*)(first->next)) );
-        T ret= first->next->val;
+        } while( !__sync_bool_compare_and_swap((uint64_t**)(&head->next), (uint64_t*)first, (uint64_t*)(first->next)) );
+        T ret= first->val;
         first->next = nullptr;
+        if(tail==first){
+            tail = first;
+        }
         DynamicPool<T>::avaliable.push(first);
-        fprintf(stderr, "pop T, push node\n");
+        fprintf(stderr, "pop T, push node:%d\n", first);
         DynamicPool<T>::avaliable.print();
         return ret;
     }

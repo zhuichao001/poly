@@ -3,7 +3,7 @@
 #include "dynamic_pool.h"
 
 template<> StaticPool<Node<int* >* > DynamicPool<int* >::avaliable(4);
-DynamicPool<int*> qi(4);
+DynamicPool<int*> qi;
 
 void init(){
     int * all = ::new int[4];
