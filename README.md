@@ -1,2 +1,2 @@
 # poly
-High performance memory pool, as a reference of dlmalloc
+High performance object pool
