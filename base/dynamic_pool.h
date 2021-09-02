@@ -86,23 +86,26 @@ public:
         return true;
     }
 
-    T pop() {
+    bool pop(T *t) {
         Node<T> *first = nullptr;
         do{
             first = head->next;
             if (first == nullptr){
-                return nullptr;
+                return false;
             }
         } while( !__sync_bool_compare_and_swap((uint64_t**)(&head->next), (uint64_t*)first, (uint64_t*)(first->next)) );
 
-        T ret= first->val;
         first->next = nullptr;
-        if(tail==first){
-            tail = first;
+        if(first==tail){
+            tail = head;
         }
 
+        *t = first->val;
+
+        //for reuse Node<T>
         DynamicPool<T>::avaliable.push(first);
-        return ret;
+
+        return true;
     }
 };
 

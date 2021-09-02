@@ -1,7 +1,7 @@
 #include "message.h"
 
 
-const int DEFAULT_POOL_SIZE = 2; 
+const int DEFAULT_POOL_SIZE = 4; 
 template<> StaticPool<Node<Message*>*> DynamicPool<Message*>::avaliable(DEFAULT_POOL_SIZE);
 
 DynamicPool<Message*> Message::pool;

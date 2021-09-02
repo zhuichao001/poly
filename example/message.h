@@ -27,8 +27,9 @@ public:
 
     void* operator new(size_t size) {
         fprintf(stderr, "new called\n");
-        void *p = Message::pool.pop();
-        if(p==nullptr){
+        Message *p = nullptr;
+        bool ok = Message::pool.pop(&p);
+        if(!ok){
             fprintf(stderr, "new failed\n");
         } else {
             fprintf(stderr, "new ok\n");
